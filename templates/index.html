@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hacker News Monitoring Dashboard</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="/static/logo.png" alt="Dashboard Logo">
+                </div>
+
+                <button class="sidebar-close-btn" id="closeSidebarBtn" title="Close sidebar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-section="dashboard">
+                    <i class="ri-home-5-fill"></i>
+                    <span class="nav-text">Dashboard</span>
+                </button>
+
+                <button class="nav-item" data-section="stories">
+                    <i class="ri-trophy-line"></i>
+                    <span class="nav-text">Top Stories</span>
+                </button>
+
+                <button class="nav-item" data-section="search">
+                    <i class="ri-search-line"></i>
+                    <span class="nav-text">Search</span>
+                </button>
+
+                <button class="nav-item" data-section="keywords">
+                    <i class="ri-price-tag-3-line"></i>
+                    <span class="nav-text">Keywords</span>
+                </button>
+
+                <a class="nav-item" href="/export">
+                    <i class="ri-download-line"></i>
+                    <span class="nav-text">Export</span>
+                </a>
+
+               <button class="nav-item" data-section="about">
+    <i class="ri-information-line"></i>
+    <span class="nav-text">About</span>
+</button>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div class="title-area">
+                    <button class="menu-button" id="openSidebarBtn" title="Open sidebar">
+                        <i class="ri-menu-line"></i>
+                    </button>
+
+                    <h1>Hacker News Monitoring Dashboard</h1>
+                </div>
+
+                <div class="top-actions">
+                    <div class="search-box" id="searchBox">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="searchInput" placeholder="Search stories, authors, categories, keywords...">
+                    </div>
+
+                    <button class="refresh-btn" onclick="loadStories()">
+                        <i class="ri-refresh-line"></i>
+                        <span>Refresh</span>
+                    </button>
+
+                    <button class="profile" id="profileBtn" title="Profile">
+                        <div class="avatar">
+                            <i class="ri-user-fill"></i>
+                        </div>
+                        <i class="ri-arrow-down-s-line profile-arrow"></i>
+                    </button>
+                </div>
+            </header>
+
+            <section class="dashboard" id="dashboardSection">
+
+                <section class="stats-grid" id="statsSection">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="ri-newspaper-line"></i>
+                        </div>
+                        <div>
+                            <h3>Stories Collected</h3>
+                            <p id="totalStories">0</p>
+                            <span class="positive">Live data from Hacker News</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="ri-price-tag-3-line"></i>
+                        </div>
+                        <div>
+                            <h3>Matched Keywords</h3>
+                            <p id="matchedKeywords">0</p>
+                            <span class="positive">Detected automatically</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon yellow">
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <div>
+                            <h3>Average Score</h3>
+                            <p id="averageScore">0</p>
+                            <span class="neutral">Based on current stories</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="ri-time-line"></i>
+                        </div>
+                        <div>
+                            <h3>Last Updated</h3>
+                            <p id="lastUpdated">Now</p>
+                            <span id="lastUpdatedFull">Waiting for data...</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="filter-card" id="keywordsSection">
+                    <strong>Filter by Category</strong>
+
+                    <div class="filter-buttons">
+    <button class="filter-btn active" data-category="All">All</button>
+    <button class="filter-btn" data-category="AI">AI</button>
+    <button class="filter-btn" data-category="Cybersecurity">Cybersecurity</button>
+    <button class="filter-btn" data-category="Programming">Programming</button>
+    <button class="filter-btn" data-category="Web Development">Web Development</button>
+    <button class="filter-btn" data-category="Data & Databases">Data & Databases</button>
+    <button class="filter-btn" data-category="Cloud & DevOps">Cloud & DevOps</button>
+    <button class="filter-btn" data-category="Startups & Business">Startups & Business</button>
+    <button class="filter-btn" data-category="Hardware">Hardware</button>
+    <button class="filter-btn" data-category="Science & Research">Science & Research</button>
+    <button class="filter-btn" data-category="Crypto & Blockchain">Crypto & Blockchain</button>
+    <button class="filter-btn" data-category="Other">Other</button>
+</div>
+                </section>
+
+                <section class="content-grid">
+
+                    <div class="panel table-panel" id="storiesSection">
+                        <h2>Top Stories</h2>
+
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Score</th>
+                                        <th>Published</th>
+                                        <th>Category</th>
+                                        <th>Keyword</th>
+                                        <th>Link</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="storiesTable">
+                                    <tr>
+                                        <td colspan="8">Loading stories...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="right-column">
+                        <div class="panel chart-panel">
+                            <h2>
+                                <i class="ri-bar-chart-fill"></i>
+                                Stories by Category
+                            </h2>
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+
+                        <div class="panel export-panel">
+                            <h2>
+                                <i class="ri-download-line"></i>
+                                Export Data
+                            </h2>
+
+                            <p>Download the collected stories and their matched keywords.</p>
+
+                            <div class="export-buttons">
+                                <a href="/export" class="export-card">
+                                    <i class="ri-file-excel-2-line"></i>
+                                    CSV
+                                </a>
+
+                                <a href="/export" class="export-card">
+                                    <i class="ri-file-download-line"></i>
+                                    Download
+                                </a>
+                            </div>
+
+                            <small>Includes title, author, score, date, category, and matched keyword.</small>
+                        </div>
+
+                       <div class="panel about-panel hidden" id="aboutPanel">
+    <h2>
+        <i class="ri-information-line"></i>
+        About This Project
+    </h2>
+
+    <div class="about-content">
+        <p>
+            <strong>Hacker News Monitoring Dashboard</strong> is a web application that collects
+            live stories from the Hacker News API, organizes them by technology-related categories,
+            detects matched keywords, and displays the results in a clean interactive dashboard.
+        </p>
+
+        <p>
+            The dashboard helps users quickly understand what topics are trending, compare story
+            categories, search articles, and export the collected data as a CSV file.
+        </p>
+    </div>
+</div>
+                    </div>
+
+                </section>
+
+                <section class="source-box">
+                    <div class="info-icon">
+                        <i class="ri-information-fill"></i>
+                    </div>
+
+                    <div>
+                        <strong>Source: Hacker News API</strong>
+                        <p>All data is fetched in real time from Hacker News and processed by this dashboard.</p>
+                    </div>
+                </section>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
