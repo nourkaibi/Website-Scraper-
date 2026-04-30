@@ -1,3 +1,26 @@
+Project 8: Website Scraper
+Course: Cyber Security IT360
+Instructor: Manel Abdelkader
+Steps 3 & 4 — High-Level Design & Development Plan
+Group Members:
+Elaa Ben Ayech
+Hadil Tlili
+Maha Wanna
+Nour ElHouda Kaibi
+Major/Minor: BA/IT
+Academic Year: 2025/2026
+Page 1
+Project 8: Website Scraper — Cyber Security IT360
+Step 3: High-Level Design
+Overview
+The proposed solution is a Hacker News Monitoring Dashboard — a monitoring and analysis layer
+built on top of Hacker News data. It collects stories, classifies them by topic, and presents them
+in a structured, searchable interface. It does not replicate the Hacker News website; it adds
+analytical value through filtering, classification, and export.
+System Architecture
+The system follows a modular architecture with two main sides:
+• Data Collection & Processing — retrieves and prepares story data.
+• User Dashboard — displays the processed information interactively.
 Data flows as follows:
 Hacker News API → Data Collection → Processing & Classification → Storage → Backend → Frontend
 Dashboard → User
