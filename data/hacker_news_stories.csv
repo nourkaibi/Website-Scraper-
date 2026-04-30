@@ -1,31 +1,31 @@
 rank,id,title,author,score,time,url,comments,category,matched_keyword
-1,47949027,Zed 1.0,salkahfi,1502,2026-04-29 15:34,https://zed.dev/blog/zed-1-0,489,Other,No match
-2,47952181,Copy Fail – CVE-2026-31431,unsnap_biceps,546,2026-04-29 19:13,https://copy.fail/,252,Cybersecurity,cve
-3,47953541,OpenTrafficMap,moooo99,144,2026-04-29 20:49,https://opentrafficmap.org/,32,Other,No match
-4,47949939,Cursor Camp,bpierre,583,2026-04-29 16:39,https://neal.fun/cursor-camp/,103,Other,No match
-5,47952722,HERMES.md in commit messages causes requests to route to extra usage billing,homebrewer,973,2026-04-29 19:54,https://github.com/anthropics/claude-code/issues/53262,412,Other,No match
-6,47950510,FastCGI: 30 years old and still the better protocol for reverse proxies,agwa,241,2026-04-29 17:16,https://www.agwa.name/blog/post/fastcgi_is_the_better_protocol_for_reverse_proxies,64,Other,No match
-7,47933359,DRAM Crunch: Lessons for System Design,giuliomagnifico,29,2026-04-28 13:07,https://www.eetimes.com/what-the-dram-crunch-teaches-us-about-system-design/,2,Other,No match
-8,47945707,Why I still reach for Lisp and Scheme instead of Haskell,jjba23,161,2026-04-29 09:43,https://jointhefreeworld.org/blog/articles/lisps/why-i-still-reach-for-scheme-instead-of-haskell/index.html,51,Other,No match
-9,47955118,Vera: a programming language designed for machines to write,unignorant,40,2026-04-29 22:41,https://github.com/aallan/vera,22,Programming,programming
-10,47951137,Laws of UX,bobbiechen,177,2026-04-29 17:58,https://lawsofux.com/,30,Other,No match
-11,47954745,"I benchmarked Claude Code's caveman plugin against ""be brief.""",max-t-dev,41,2026-04-29 22:11,https://www.maxtaylor.me/articles/i-benchmarked-caveman-against-two-words,21,AI,claude
-12,47949204,An open-source stethoscope that costs between $2.5 and $5 to produce,0x54MUR41,191,2026-04-29 15:47,https://github.com/GliaX/Stethoscope,75,Other,No match
-13,47955226,Gooseworks (YC W23) Is Hiring a Founding Growth Engineer,shivsak,1,2026-04-29 22:50,https://www.ycombinator.com/companies/gooseworks/jobs/ztgY6bD-founding-growth-engineer,0,Startups & Business,yc
-14,47951786,Ramp's Sheets AI Exfiltrates Financials,takira,101,2026-04-29 18:44,https://www.promptarmor.com/resources/ramps-sheets-ai-exfiltrates-financials,34,AI,ai
-15,47955655,Be Alexandra Elbakyan,DanielleMolloy,81,2026-04-29 23:39,https://nitter.space/MushtaqBilalPhD/status/2049057344013881523#m,6,Other,No match
-16,47948603,We need a federation of forges,icy,515,2026-04-29 15:00,https://blog.tangled.org/federation/,327,Other,No match
-17,47953275,"Kyoto cherry blossoms now bloom earlier than at any point in 1,200 years",momentmaker,229,2026-04-29 20:32,https://jivx.com/kyoto-bloom,63,Other,No match
-18,47949616,What can we gain by losing infinity?,Tomte,9,2026-04-29 16:16,https://www.quantamagazine.org/what-can-we-gain-by-losing-infinity-20260429/,7,Other,No match
-19,47950091,Online age verification is the hill to die on,Cider9986,733,2026-04-29 16:49,https://x.com/GlennMeder/status/2049088498163216560,458,Other,No match
-20,47948664,How to Build the Future: Demis Hassabis [video],sandslash,84,2026-04-29 15:05,https://www.youtube.com/watch?v=JNyuX1zoOgU,41,Other,No match
-21,47921802,Postgres's lateral joins allow for quite the good eDSL,nitros,55,2026-04-27 15:07,https://bensimms.moe/postgres-lateral-makes-quite-a-good-dsl/,6,Data & Databases,postgres
-22,47934880,The Lingua Franca of LaTeX (2019),ripe,10,2026-04-28 15:10,https://increment.com/open-source/the-lingua-franca-of-latex/,2,Other,No match
-23,47930003,Consequences of passing too few register parameters to a C function,aragonite,3,2026-04-28 03:55,https://devblogs.microsoft.com/oldnewthing/20260427-00/?p=112271,0,Other,No match
-24,47939579,Ghostty is leaving GitHub,WadeGrimridge,3342,2026-04-28 20:44,https://mitchellh.com/writing/ghostty-leaving-github,993,Programming,github
-25,47951037,Virtualisation on Apple Silicon Macs is different,zdw,68,2026-04-29 17:51,https://eclecticlight.co/2026/04/29/virtualisation-on-apple-silicon-macs-is-different/,18,Other,No match
-26,47951007,Maryland becomes first state to ban surveillance pricing in grocery stores,01-_-,246,2026-04-29 17:50,https://www.theguardian.com/technology/2026/apr/29/maryland-grocery-stores-ban-surveillance-pricing,174,Other,No match
-27,47946813,GitHub – DOS 1.0: Transcription of Tim Paterson's DOS Printouts,s2l,122,2026-04-29 12:25,https://github.com/DOS-History/Paterson-Listings,6,Programming,github
-28,47950575,At Protocol: Building the Social Internet,resiros,63,2026-04-29 17:20,https://atproto.com/,34,Other,No match
-29,47949642,Mistral Medium 3.5,meetpateltech,425,2026-04-29 16:17,https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5,197,Other,No match
-30,47945918,Soft launch of open-source code platform for government,e12e,523,2026-04-29 10:14,https://www.nldigitalgovernment.nl/news/soft-launch-for-government-open-source-code-platform/,119,Programming,code
+1,47967786,Rivian allows you to disable all internet connectivity,Cider9986,130,2026-04-30 21:27,https://rivian.com/support/article/can-i-disable-all-data-collection-from-my-vehicle,44,Other,No match
+2,47965060,How Mark Klein told the EFF about Room 641A [book excerpt],the-mitr,329,2026-04-30 17:41,https://thereader.mitpress.mit.edu/the-whistleblower-who-uncovered-the-nsas-big-brother-machine/,92,Other,No match
+3,47964617,Shai-Hulud Themed Malware Found in the PyTorch Lightning AI Training Library,j12y,254,2026-04-30 17:09,https://semgrep.dev/blog/2026/malicious-dependency-in-pytorch-lightning-used-for-ai-training/,80,AI,ai
+4,47967262,"LinkedIn scans for 6,278 extensions and encrypts the results into every request",un-nf,85,2026-04-30 20:40,https://404privacy.com/blog/linkedin-is-scanning-your-browser-extensions-this-is-how-they-use-the-data/,19,Other,No match
+5,47965503,I built a Game Boy emulator in F#,elvis70,138,2026-04-30 18:14,https://nickkossolapov.github.io/fame-boy/building-a-game-boy-emulator-in-fsharp/,35,Other,No match
+6,47965108,CopyFail was not disclosed to Gentoo developer,ori_b,260,2026-04-30 17:43,https://www.openwall.com/lists/oss-security/2026/04/30/10,172,Programming,developer
+7,47967289,U.S. Senators Vote to Ban Themselves from Trading on Prediction Markets,kamaraju,163,2026-04-30 20:42,https://www.wsj.com/politics/policy/senators-vote-to-ban-themselves-from-trading-on-prediction-markets-ae4535dd,55,Other,No match
+8,47963204,"Claude Code refuses requests or charges extra if your commits mention ""OpenClaw""",elmean,748,2026-04-30 15:36,https://twitter.com/theo/status/2049645973350363168,436,AI,claude
+9,47961319,Belgium stops decommissioning nuclear power plants,mpweiher,681,2026-04-30 13:17,https://dpa-international.com/general-news/urn:newsml:dpa.com:20090101:260430-930-14717/,599,Other,No match
+10,47962548,How an oil refinery works,chmaynard,260,2026-04-30 14:54,https://www.construction-physics.com/p/how-an-oil-refinery-works,66,Other,No match
+11,47937814,Reverse Engineering SimTower,patrickhulin,36,2026-04-28 18:41,https://phulin.me/blog/simtower,5,Other,No match
+12,47963316,"Durable queues, streams, pub/sub, and a cron scheduler – inside your SQLite file",ferriswil,134,2026-04-30 15:43,https://honker.dev/,37,Data & Databases,sqlite
+13,47966254,Full-Text Search with DuckDB,ethagnawl,43,2026-04-30 19:14,https://peterdohertys.website/blog-posts/full-text-search-w-duckdb.html,11,Other,No match
+14,47924912,You can beat the binary search,vok,194,2026-04-27 18:52,https://lemire.me/blog/2026/04/27/you-can-beat-the-binary-search/,96,Other,No match
+15,47939158,The Church Rock Uranium Mill Spill,Sir_Twist,17,2026-04-28 20:13,https://en.wikipedia.org/wiki/Church_Rock_uranium_mill_spill,2,Other,No match
+16,47966625,Does Postgres Scale?,KraftyOne,37,2026-04-30 19:45,https://www.dbos.dev/blog/benchmarking-workflow-execution-scalability-on-postgres,16,Data & Databases,postgres
+17,47967069,Follow-up to Carrot disclosure: Forgejo,homebrewer,19,2026-04-30 20:22,https://dustri.org/b/follow-up-to-carrot-disclosure-forgejo.html,5,Other,No match
+18,47961378,I aggregated 28 US Government auction sites into one search,scarsam,205,2026-04-30 13:24,https://bidprowl.com,62,Other,No match
+19,47959463,Mozilla's opposition to Chrome's Prompt API,jaffathecake,517,2026-04-30 08:43,https://github.com/mozilla/standards-positions/issues/1213#issuecomment-4347988313,199,Web Development,api
+20,47967508,The upsell game – Vercel upselling tactics revealed,bartoindahouse,16,2026-04-30 21:02,https://theupsellgame.com/,0,Other,No match
+21,47947944,10Gb/s Ethernet: what I did to get it working in my home,gpjt,99,2026-04-29 14:15,https://www.gilesthomas.com/2026/04/10g-ethernet-what-i-did,74,Other,No match
+22,47964034,Spain's parliament will act against massive IP blockages by LaLiga,akyuu,333,2026-04-30 16:31,https://www.democrata.es/en/politics/congress-and-senate/congress-will-act-against-massive-ip-blockages-by-laliga/,155,Other,No match
+23,47965835,Recovering files from beyond the grave using PhotoRec,speckx,29,2026-04-30 18:42,https://lost-number.bearblog.dev/recovering-files-from-beyond-the-grave-using-photorec/,5,Other,No match
+24,47937611,How Semiconductors Were Made in America,johncole,27,2026-04-28 18:26,https://www.siliconimist.com/p/semiconductors-made-in-america,18,Other,No match
+25,47968112,Show HN: Pu.sh – a full coding-agent harness in 400 lines of shell,nahimn,9,2026-04-30 21:55,https://pu.dev/,0,Programming,coding
+26,47963868,A 1960s art school experiment that redefined creativity,pseudolus,64,2026-04-30 16:20,https://thereader.mitpress.mit.edu/the-1960s-art-school-experiment-that-redefined-creativity/,19,Other,No match
+27,47965027,American Dads Became the Parents Their Fathers Never Were,ozozozd,33,2026-04-30 17:38,https://www.derekthompson.org/p/why-do-richer-dads-spend-more-time,10,Other,No match
+28,47967974,Hackers are actively exploiting a bug in cPanel and WHM,dotmanish,4,2026-04-30 21:43,https://techcrunch.com/2026/04/30/hackers-are-actively-exploiting-a-bug-in-cpanel-used-by-millions-of-websites/,0,Other,No match
+29,47960507,Granite 4.1: IBM's 8B Model Matching 32B MoE,steveharing1,259,2026-04-30 11:31,https://firethering.com/granite-4-1-ibm-open-source-model-family/,164,Other,No match
+30,47966484,The Human Creativity Benchmark – Evaluating Generative AI in Creative Work,0bytematt,12,2026-04-30 19:33,https://contralabs.com/research/human-creativity-benchmark,1,AI,ai
