@@ -278,7 +278,7 @@ def load_csv():
 # -----------------------------
 @app.route("/")
 def index():
-    stories = fetch_hacker_news_stories(limit=70)
+    stories = fetch_hacker_news_stories(limit=100)
     save_to_csv(stories)
 
     category_counts = {}
