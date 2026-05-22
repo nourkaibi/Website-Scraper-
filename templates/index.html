@@ -2,259 +2,386 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hacker News Monitoring Dashboard</title>
-
-    <link rel="stylesheet" href="/static/style.css">
-
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsScope | Hacker News Monitoring Dashboard</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <a href="#mainContent" class="skip-link">Skip to content</a>
 
-    <div class="layout">
+    <header class="top-strip">
+        <div class="strip-inner">
+            <p><strong>{{ stats.high_priority_stories }}</strong> high-priority stories detected in the current monitoring session</p>
+            <a href="#stories" class="strip-link">Open live review <i class="ri-arrow-right-line"></i></a>
+        </div>
+    </header>
 
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <img src="/static/logo.png" alt="Dashboard Logo">
+    <nav class="site-nav">
+        <div class="nav-brand">
+            <div class="brand-logo-wrap">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="NewsScope logo" class="brand-logo-img">
+            </div>
+            <div>
+                <h2>NewsScope</h2>
+                <p>Hacker News Intelligence Dashboard</p>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#summary">Summary</a>
+            <a href="#workflow">Workflow</a>
+            <a href="#insights">Insights</a>
+            <a href="#stories">Stories</a>
+        </div>
+
+        <div class="nav-actions">
+            <button id="aboutBtn" class="btn btn-outline">About</button>
+        </div>
+    </nav>
+
+    <main id="mainContent">
+        <section class="hero-section" id="overview">
+            <div class="hero-copy">
+                <p class="eyebrow">Cyber Security IT360 · Project 8</p>
+                <h1>Hacker News Story Intelligence</h1>
+                <p class="hero-text">
+                    Collecting, classifying, prioritizing, and exporting top technology stories for structured review.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#stories" class="btn btn-dark btn-large">Review live stories</a>
+                    <a href="#workflow" class="btn btn-outline btn-large">See how it works</a>
                 </div>
 
-                <button class="sidebar-close-btn" id="closeSidebarBtn" title="Close sidebar">
-                    <i class="ri-close-line"></i>
-                </button>
+               <div class="hero-mini-note">
+    <span class="mini-dot"></span>
+    <p>Live monitoring of top Hacker News stories with structured classification and priority analysis.</p>
+</div>
             </div>
 
-            <nav class="sidebar-nav">
-                <button class="nav-item active" data-section="dashboard">
-                    <i class="ri-home-5-fill"></i>
-                    <span class="nav-text">Dashboard</span>
-                </button>
-
-                <button class="nav-item" data-section="stories">
-                    <i class="ri-trophy-line"></i>
-                    <span class="nav-text">Top Stories</span>
-                </button>
-
-                <button class="nav-item" data-section="search">
-                    <i class="ri-search-line"></i>
-                    <span class="nav-text">Search</span>
-                </button>
-
-                <button class="nav-item" data-section="keywords">
-                    <i class="ri-price-tag-3-line"></i>
-                    <span class="nav-text">Keywords</span>
-                </button>
-
-                <a class="nav-item" href="/export">
-                    <i class="ri-download-line"></i>
-                    <span class="nav-text">Export</span>
-                </a>
-
-               <button class="nav-item" data-section="about">
-    <i class="ri-information-line"></i>
-    <span class="nav-text">About</span>
-</button>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-
-            <header class="topbar">
-                <div class="title-area">
-                    <button class="menu-button" id="openSidebarBtn" title="Open sidebar">
-                        <i class="ri-menu-line"></i>
-                    </button>
-
-                    <h1>Hacker News Monitoring Dashboard</h1>
-                </div>
-
-                <div class="top-actions">
-                    <div class="search-box" id="searchBox">
-                        <i class="ri-search-line"></i>
-                        <input type="text" id="searchInput" placeholder="Search stories, authors, categories, keywords...">
-                    </div>
-
-                    <button class="refresh-btn" onclick="loadStories()">
-                        <i class="ri-refresh-line"></i>
-                        <span>Refresh</span>
-                    </button>
-
-                    <button class="profile" id="profileBtn" title="Profile">
-                        <div class="avatar">
-                            <i class="ri-user-fill"></i>
+            <div class="hero-visual">
+                <div class="browser-stack">
+                    <div class="browser-window window-back"></div>
+                    <div class="browser-window window-mid"></div>
+                    <div class="browser-window window-front">
+                        <div class="window-bar">
+                            <span></span><span></span><span></span>
                         </div>
-                        <i class="ri-arrow-down-s-line profile-arrow"></i>
-                    </button>
-                </div>
-            </header>
-
-            <section class="dashboard" id="dashboardSection">
-
-                <section class="stats-grid" id="statsSection">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <i class="ri-newspaper-line"></i>
-                        </div>
-                        <div>
-                            <h3>Stories Collected</h3>
-                            <p id="totalStories">0</p>
-                            <span class="positive">Live data from Hacker News</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <i class="ri-price-tag-3-line"></i>
-                        </div>
-                        <div>
-                            <h3>Matched Keywords</h3>
-                            <p id="matchedKeywords">0</p>
-                            <span class="positive">Detected automatically</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon yellow">
-                            <i class="ri-star-fill"></i>
-                        </div>
-                        <div>
-                            <h3>Average Score</h3>
-                            <p id="averageScore">0</p>
-                            <span class="neutral">Based on current stories</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <i class="ri-time-line"></i>
-                        </div>
-                        <div>
-                            <h3>Last Updated</h3>
-                            <p id="lastUpdated">Now</p>
-                            <span id="lastUpdatedFull">Waiting for data...</span>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="filter-card" id="keywordsSection">
-                    <strong>Filter by Category</strong>
-
-                    <div class="filter-buttons">
-    <button class="filter-btn active" data-category="All">All</button>
-    <button class="filter-btn" data-category="AI">AI</button>
-    <button class="filter-btn" data-category="Cybersecurity">Cybersecurity</button>
-    <button class="filter-btn" data-category="Programming">Programming</button>
-    <button class="filter-btn" data-category="Web Development">Web Development</button>
-    <button class="filter-btn" data-category="Data & Databases">Data & Databases</button>
-    <button class="filter-btn" data-category="Cloud & DevOps">Cloud & DevOps</button>
-    <button class="filter-btn" data-category="Startups & Business">Startups & Business</button>
-    <button class="filter-btn" data-category="Hardware">Hardware</button>
-    <button class="filter-btn" data-category="Science & Research">Science & Research</button>
-    <button class="filter-btn" data-category="Crypto & Blockchain">Crypto & Blockchain</button>
-    <button class="filter-btn" data-category="Other">Other</button>
-</div>
-                </section>
-
-                <section class="content-grid">
-
-                    <div class="panel table-panel" id="storiesSection">
-                        <h2>Top Stories</h2>
-
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Title</th>
-                                        <th>Author</th>
-                                        <th>Score</th>
-                                        <th>Published</th>
-                                        <th>Category</th>
-                                        <th>Keyword</th>
-                                        <th>Link</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody id="storiesTable">
-                                    <tr>
-                                        <td colspan="8">Loading stories...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="right-column">
-                        <div class="panel chart-panel">
-                            <h2>
-                                <i class="ri-bar-chart-fill"></i>
-                                Stories by Category
-                            </h2>
-                            <canvas id="categoryChart"></canvas>
-                        </div>
-
-                        <div class="panel export-panel">
-                            <h2>
-                                <i class="ri-download-line"></i>
-                                Export Data
-                            </h2>
-
-                            <p>Download the collected stories and their matched keywords.</p>
-
-                            <div class="export-buttons">
-                                <a href="/export" class="export-card">
-                                    <i class="ri-file-excel-2-line"></i>
-                                    CSV
-                                </a>
-
-                                <a href="/export" class="export-card">
-                                    <i class="ri-file-download-line"></i>
-                                    Download
-                                </a>
+                        <div class="window-content">
+                            <div class="signal-header">
+                                <span class="panel-chip">Live monitor</span>
+                                <span class="panel-chip dark-chip">{{ stats.most_active_category }}</span>
                             </div>
 
-                            <small>Includes title, author, score, date, category, and matched keyword.</small>
+                            <div class="signal-metrics">
+                                <div>
+                                    <small>Stories</small>
+                                    <strong>{{ stats.stories_collected }}</strong>
+                                </div>
+                                <div>
+                                    <small>High priority</small>
+                                    <strong>{{ stats.high_priority_stories }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="signal-code">
+<pre>{
+  "category": "{{ stats.most_active_category }}",
+  "matched_keywords": {{ stats.matched_keywords }},
+  "avg_score": {{ stats.average_score }},
+  "cybersecurity": {{ stats.cybersecurity_stories }}
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="metric-band" id="summary">
+            <article class="metric-card">
+                <span>Stories collected</span>
+                <strong>{{ stats.stories_collected }}</strong>
+                <p>Total stories retrieved from the Hacker News API in this session.</p>
+            </article>
+
+            <article class="metric-card">
+                <span>Matched keywords</span>
+                <strong>{{ stats.matched_keywords }}</strong>
+                <p>Stories that matched at least one category keyword.</p>
+            </article>
+
+            <article class="metric-card">
+                <span>Average score</span>
+                <strong>{{ stats.average_score }}</strong>
+                <p>Average community score across the current story set.</p>
+            </article>
+
+            <article class="metric-card emphasis">
+                <span>Cybersecurity stories</span>
+                <strong>{{ stats.cybersecurity_stories }}</strong>
+                <p>Stories flagged by cybersecurity-related keywords and rules.</p>
+            </article>
+        </section>
+
+        <section class="workflow-section" id="workflow">
+            <div class="section-heading">
+                <p class="eyebrow">Functional flow</p>
+                <h2>How the scraper processes stories</h2>
+                <p class="section-subtext">
+                    The dashboard follows a simple pipeline from story collection to classification, prioritization, visualization, and export.
+                </p>
+            </div>
+
+            <div class="workflow-grid">
+                <article class="workflow-step">
+                    <div class="step-icon"><i class="ri-rss-line"></i></div>
+                    <h3>1. Collect</h3>
+                    <p>Fetch top stories from the Hacker News API.</p>
+                </article>
+
+                <article class="workflow-step">
+                    <div class="step-icon"><i class="ri-file-list-3-line"></i></div>
+                    <h3>2. Extract</h3>
+                    <p>Store title, author, score, comments, time, and external link.</p>
+                </article>
+
+                <article class="workflow-step">
+                    <div class="step-icon"><i class="ri-price-tag-3-line"></i></div>
+                    <h3>3. Classify</h3>
+                    <p>Assign categories using manually selected rule-based keywords.</p>
+                </article>
+
+                <article class="workflow-step">
+                    <div class="step-icon"><i class="ri-alarm-warning-line"></i></div>
+                    <h3>4. Prioritize</h3>
+                    <p>Mark stories as High, Medium, or Low priority according to thresholds.</p>
+                </article>
+
+                <article class="workflow-step">
+                    <div class="step-icon"><i class="ri-bar-chart-box-line"></i></div>
+                    <h3>5. Visualize</h3>
+                    <p>Display summaries, charts, top keywords, and table results in the dashboard.</p>
+                </article>
+
+                <article class="workflow-step">
+                    <div class="step-icon"><i class="ri-download-2-line"></i></div>
+                    <h3>6. Export</h3>
+                    <p>Download all records or only the filtered result set as CSV.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="insights-section" id="insights">
+            <div class="section-heading">
+                <p class="eyebrow">Monitoring insights</p>
+                <h2>Category and keyword patterns</h2>
+                <p class="section-subtext">
+                    These panels summarize the current story distribution and the most active keyword matches.
+                </p>
+            </div>
+
+            <div class="insights-layout">
+                <article class="chart-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Stories by category</h3>
+                            <p>Current distribution of the rule-based classification system.</p>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </article>
+
+                <div class="side-panels">
+                    <article class="dark-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Top keywords</h3>
+                                <p>Most frequent matches in the current dataset.</p>
+                            </div>
                         </div>
 
-                       <div class="panel about-panel hidden" id="aboutPanel">
-    <h2>
-        <i class="ri-information-line"></i>
-        About This Project
-    </h2>
+                        <div class="keyword-list">
+                            {% for keyword, count in top_keywords %}
+                            <div class="keyword-item">
+                                <span>{{ keyword }}</span>
+                                <strong>{{ count }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </article>
 
-    <div class="about-content">
-        <p>
-            <strong>Hacker News Monitoring Dashboard</strong> is a web application that collects
-            live stories from the Hacker News API, organizes them by technology-related categories,
-            detects matched keywords, and displays the results in a clean interactive dashboard.
-        </p>
+                    <article class="light-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Dashboard summary</h3>
+                                <p>Quick overview of current monitoring signals.</p>
+                            </div>
+                        </div>
 
-        <p>
-            The dashboard helps users quickly understand what topics are trending, compare story
-            categories, search articles, and export the collected data as a CSV file.
-        </p>
+                        <ul class="summary-list">
+                            <li><span>Most active category</span><strong>{{ stats.most_active_category }}</strong></li>
+                            <li><span>High priority stories</span><strong>{{ stats.high_priority_stories }}</strong></li>
+                            <li><span>Average score</span><strong>{{ stats.average_score }}</strong></li>
+                            <li><span>Cybersecurity stories</span><strong>{{ stats.cybersecurity_stories }}</strong></li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="stories-section" id="stories">
+            <div class="section-heading section-heading-inline">
+                <div>
+                    <p class="eyebrow">Detailed records</p>
+                    <h2>Story intelligence table</h2>
+                    <p class="section-subtext">
+                        Search, filter, inspect, and export structured Hacker News stories.
+                    </p>
+                </div>
+                <div class="section-actions">
+                    <a href="/export/all" class="btn btn-outline">Export all stories</a>
+                    <button id="exportFilteredBtnBottom" class="btn btn-dark">Export filtered stories</button>
+                </div>
+            </div>
+
+            <div class="table-panel">
+                <div class="table-toolbar">
+                    <div class="search-box">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="searchInput" placeholder="Search by story title">
+                    </div>
+
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="AI">AI</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Data & Databases">Data & Databases</option>
+                        <option value="Cloud & DevOps">Cloud & DevOps</option>
+                        <option value="Startups & Business">Startups & Business</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Science & Research">Science & Research</option>
+                        <option value="Crypto & Blockchain">Crypto & Blockchain</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <select id="priorityFilter">
+                        <option value="">All Priorities</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div class="table-wrap">
+                    <table id="storiesTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Keyword</th>
+                                <th>Priority</th>
+                                <th>Score</th>
+                                <th>Comments</th>
+                                <th>Author</th>
+                                <th>Date</th>
+                                <th>Inspect</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for story in stories %}
+                            <tr
+                                data-title="{{ story.title }}"
+                                data-category="{{ story.category }}"
+                                data-priority="{{ story.priority }}"
+                                data-keyword="{{ story.matched_keyword }}"
+                                data-author="{{ story.author }}"
+                                data-score="{{ story.score }}"
+                                data-comments="{{ story.comments }}"
+                                data-date="{{ story.date_time }}"
+                                data-link="{{ story.link }}"
+                                data-reason="{{ story.classification_reason }}"
+                            >
+                                <td>{{ story.rank }}</td>
+                                <td class="story-title-cell">
+                                    <a href="{{ story.link }}" target="_blank">{{ story.title }}</a>
+                                </td>
+                                <td><span class="story-tag category-tag">{{ story.category }}</span></td>
+                                <td>{{ story.matched_keyword }}</td>
+                                <td><span class="story-tag priority-{{ story.priority|lower }}">{{ story.priority }}</span></td>
+                                <td>{{ story.score }}</td>
+                                <td>{{ story.comments }}</td>
+                                <td>{{ story.author }}</td>
+                                <td>{{ story.date_time }}</td>
+                                <td>
+                                    <button class="inspect-btn details-btn">
+                                        <i class="ri-arrow-right-up-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <aside class="details-drawer hidden" id="storyDrawer" aria-hidden="true">
+        <div class="drawer-header">
+            <div>
+                <p class="eyebrow">Story details</p>
+                <h3 id="drawerTitle">Story title</h3>
+            </div>
+            <button class="drawer-close" id="closeDrawer">&times;</button>
+        </div>
+
+        <div class="drawer-content">
+            <div class="drawer-grid">
+                <div><span>Author</span><strong id="drawerAuthor"></strong></div>
+                <div><span>Score</span><strong id="drawerScore"></strong></div>
+                <div><span>Comments</span><strong id="drawerComments"></strong></div>
+                <div><span>Category</span><strong id="drawerCategory"></strong></div>
+                <div><span>Keyword</span><strong id="drawerKeyword"></strong></div>
+                <div><span>Priority</span><strong id="drawerPriority"></strong></div>
+                <div><span>Date</span><strong id="drawerDate"></strong></div>
+            </div>
+
+            <div class="reason-panel">
+                <h4>Classification reason</h4>
+                <p id="drawerReason"></p>
+            </div>
+
+            <a id="drawerLink" href="#" target="_blank" class="btn btn-dark drawer-link">Open original story</a>
+        </div>
+    </aside>
+
+    <div class="modal-overlay hidden" id="drawerOverlay"></div>
+
+    <div class="about-modal hidden" id="aboutModal">
+        <div class="about-card">
+            <button class="drawer-close" id="closeAbout">&times;</button>
+            <p class="eyebrow">About this project</p>
+            <h3>Website Scraper · Project 8</h3>
+            <p>
+                This application monitors Hacker News, extracts structured story data, classifies stories with rule-based keywords,
+                assigns priority levels, visualizes trends, and exports the results as CSV.
+            </p>
+        </div>
     </div>
-</div>
-                    </div>
 
-                </section>
-
-                <section class="source-box">
-                    <div class="info-icon">
-                        <i class="ri-information-fill"></i>
-                    </div>
-
-                    <div>
-                        <strong>Source: Hacker News API</strong>
-                        <p>All data is fetched in real time from Hacker News and processed by this dashboard.</p>
-                    </div>
-                </section>
-
-            </section>
-        </main>
-    </div>
-
-    <script src="/static/script.js"></script>
+    <script>
+        const categoryData = {{ category_counts | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

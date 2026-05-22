@@ -1,321 +1,187 @@
-let allStories = [];
-let selectedCategory = "All";
-let categoryChart = null;
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const priorityFilter = document.getElementById("priorityFilter");
+    const rows = document.querySelectorAll("#storiesTable tbody tr");
 
-const sidebar = document.getElementById("sidebar");
-const openSidebarBtn = document.getElementById("openSidebarBtn");
-const closeSidebarBtn = document.getElementById("closeSidebarBtn");
-const aboutPanel = document.getElementById("aboutPanel");
+    const storyDrawer = document.getElementById("storyDrawer");
+    const drawerOverlay = document.getElementById("drawerOverlay");
+    const closeDrawer = document.getElementById("closeDrawer");
 
-async function loadStories() {
-    const tableBody = document.getElementById("storiesTable");
-    tableBody.innerHTML = "<tr><td colspan='8'>Loading stories...</td></tr>";
+    const aboutBtn = document.getElementById("aboutBtn");
+    const aboutModal = document.getElementById("aboutModal");
+    const closeAbout = document.getElementById("closeAbout");
 
-    try {
-        const response = await fetch("/api/stories");
-        allStories = await response.json();
+    const exportFilteredBtnBottom = document.getElementById("exportFilteredBtnBottom");
 
-        selectedCategory = "All";
-        setActiveFilterButton("All");
+    function filterStories() {
+        const search = searchInput.value.toLowerCase().trim();
+        const category = categoryFilter.value.toLowerCase().trim();
+        const priority = priorityFilter.value.toLowerCase().trim();
 
-        updateLastUpdated();
-        applyFilters();
+        rows.forEach(row => {
+            const title = row.dataset.title.toLowerCase();
+            const rowCategory = row.dataset.category.toLowerCase();
+            const rowPriority = row.dataset.priority.toLowerCase();
 
-    } catch (error) {
-        tableBody.innerHTML = "<tr><td colspan='8'>Error loading stories. Please try again.</td></tr>";
-        console.error(error);
-    }
-}
+            const matchesSearch = !search || title.includes(search);
+            const matchesCategory = !category || rowCategory === category;
+            const matchesPriority = !priority || rowPriority === priority;
 
-function applyFilters() {
-    const searchValue = document.getElementById("searchInput").value.toLowerCase();
-
-    const filteredStories = allStories.filter(story => {
-        const title = String(story.title || "").toLowerCase();
-        const author = String(story.author || "").toLowerCase();
-        const category = String(story.category || "").toLowerCase();
-        const matchedKeyword = String(story.matched_keyword || "").toLowerCase();
-
-        const matchesSearch =
-            title.includes(searchValue) ||
-            author.includes(searchValue) ||
-            category.includes(searchValue) ||
-            matchedKeyword.includes(searchValue);
-
-        const matchesCategory =
-            selectedCategory === "All" || story.category === selectedCategory;
-
-        return matchesSearch && matchesCategory;
-    });
-
-    updateStats(filteredStories);
-    displayStories(filteredStories);
-    updateChart(filteredStories);
-}
-
-function displayStories(stories) {
-    const tableBody = document.getElementById("storiesTable");
-    tableBody.innerHTML = "";
-
-    if (stories.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='8'>No stories found.</td></tr>";
-        return;
-    }
-
-    stories.forEach(story => {
-        const row = document.createElement("tr");
-
-        const keywordHtml =
-            story.matched_keyword === "No match"
-                ? `<span class="keyword-empty">No match</span>`
-                : `<span class="keyword-badge">${escapeHtml(story.matched_keyword)}</span>`;
-
-        row.innerHTML = `
-            <td data-label="Rank">${story.rank}</td>
-            <td data-label="Title">${escapeHtml(story.title)}</td>
-            <td data-label="Author">${escapeHtml(story.author)}</td>
-            <td data-label="Score">${story.score}</td>
-            <td data-label="Published">${escapeHtml(story.time)}</td>
-            <td data-label="Category">
-                <span class="category-badge ${getCategoryBadgeClass(story.category)}">
-                    ${escapeHtml(story.category)}
-                </span>
-            </td>
-            <td data-label="Keyword">${keywordHtml}</td>
-            <td data-label="Link">
-                <a href="${escapeHtml(story.url)}" target="_blank" class="open-link">
-                    <i class="ri-external-link-line"></i>
-                </a>
-            </td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-}
-
-function updateStats(stories) {
-    const totalStories = stories.length;
-
-    const totalScore = stories.reduce((sum, story) => sum + story.score, 0);
-    const averageScore = totalStories > 0 ? Math.round(totalScore / totalStories) : 0;
-
-    const matchedKeywords = stories.filter(story => story.matched_keyword !== "No match").length;
-
-    document.getElementById("totalStories").textContent = totalStories;
-    document.getElementById("averageScore").textContent = averageScore;
-    document.getElementById("matchedKeywords").textContent = matchedKeywords;
-}
-
-function updateLastUpdated() {
-    const now = new Date();
-
-    document.getElementById("lastUpdated").textContent = "Now";
-    document.getElementById("lastUpdatedFull").textContent =
-        now.toLocaleDateString() + " " + now.toLocaleTimeString();
-}
-
-function getCategoryCounts(stories) {
-    const categories = [
-    "AI",
-    "Cybersecurity",
-    "Programming",
-    "Web Development",
-    "Data & Databases",
-    "Cloud & DevOps",
-    "Startups & Business",
-    "Hardware",
-    "Science & Research",
-    "Crypto & Blockchain",
-    "Other"
-];
-
-   const counts = {
-    "AI": 0,
-    "Cybersecurity": 0,
-    "Programming": 0,
-    "Web Development": 0,
-    "Data & Databases": 0,
-    "Cloud & DevOps": 0,
-    "Startups & Business": 0,
-    "Hardware": 0,
-    "Science & Research": 0,
-    "Crypto & Blockchain": 0,
-    "Other": 0
-};
-    stories.forEach(story => {
-        if (counts.hasOwnProperty(story.category)) {
-            counts[story.category]++;
-        } else {
-            counts["Other"]++;
-        }
-    });
-
-    return {
-        labels: categories,
-        values: categories.map(category => counts[category])
-    };
-}
-
-function updateChart(stories) {
-    const chartData = getCategoryCounts(stories);
-    const chartCanvas = document.getElementById("categoryChart");
-
-    if (categoryChart !== null) {
-        categoryChart.destroy();
-    }
-
-    categoryChart = new Chart(chartCanvas, {
-        type: "bar",
-        data: {
-            labels: chartData.labels,
-            datasets: [
-                {
-                    label: "Stories",
-                    data: chartData.values,
-                    backgroundColor: "#3b82f6",
-                    borderRadius: 6
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    }
-                }
-            }
-        }
-    });
-}
-
-function setActiveFilterButton(category) {
-    const buttons = document.querySelectorAll(".filter-btn");
-
-    buttons.forEach(button => {
-        if (button.dataset.category === category) {
-            button.classList.add("active");
-        } else {
-            button.classList.remove("active");
-        }
-    });
-}
-
-function setActiveNav(section) {
-    const navItems = document.querySelectorAll(".nav-item");
-
-    navItems.forEach(item => {
-        if (item.dataset.section === section) {
-            item.classList.add("active");
-        } else {
-            item.classList.remove("active");
-        }
-    });
-}
-
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-
-    if (section) {
-        section.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
+            row.style.display = (matchesSearch && matchesCategory && matchesPriority) ? "" : "none";
         });
     }
-}
-function handleSidebarNavigation(section) {
-    aboutPanel.classList.add("hidden");
 
-    if (section === "dashboard") {
-        setActiveNav("dashboard");
-        scrollToSection("dashboardSection");
+    function openDrawer(row) {
+        document.getElementById("drawerTitle").textContent = row.dataset.title;
+        document.getElementById("drawerAuthor").textContent = row.dataset.author;
+        document.getElementById("drawerScore").textContent = row.dataset.score;
+        document.getElementById("drawerComments").textContent = row.dataset.comments;
+        document.getElementById("drawerCategory").textContent = row.dataset.category;
+        document.getElementById("drawerKeyword").textContent = row.dataset.keyword;
+        document.getElementById("drawerPriority").textContent = row.dataset.priority;
+        document.getElementById("drawerDate").textContent = row.dataset.date;
+        document.getElementById("drawerReason").textContent = row.dataset.reason;
+        document.getElementById("drawerLink").href = row.dataset.link;
+
+        storyDrawer.classList.remove("hidden");
+        drawerOverlay.classList.remove("hidden");
+        storyDrawer.setAttribute("aria-hidden", "false");
     }
 
-    if (section === "stories") {
-        setActiveNav("stories");
-        scrollToSection("storiesSection");
+    function closeDrawerPanel() {
+        storyDrawer.classList.add("hidden");
+        drawerOverlay.classList.add("hidden");
+        storyDrawer.setAttribute("aria-hidden", "true");
     }
 
-    if (section === "search") {
-        setActiveNav("search");
-        document.getElementById("searchInput").focus();
-        scrollToSection("searchBox");
+    function exportFilteredStories() {
+        const search = encodeURIComponent(searchInput.value.trim());
+        const category = encodeURIComponent(categoryFilter.value.trim());
+        const priority = encodeURIComponent(priorityFilter.value.trim());
+
+        window.location.href = `/export/filtered?search=${search}&category=${category}&priority=${priority}`;
     }
 
-    if (section === "keywords") {
-        setActiveNav("keywords");
-        scrollToSection("keywordsSection");
-    }
+    searchInput.addEventListener("input", filterStories);
+    categoryFilter.addEventListener("change", filterStories);
+    priorityFilter.addEventListener("change", filterStories);
 
-    if (section === "about") {
-        setActiveNav("about");
-        aboutPanel.classList.remove("hidden");
-        scrollToSection("aboutPanel");
-    }
-}
-
-function closeSidebar() {
-    sidebar.classList.add("closed");
-}
-
-function openSidebar() {
-    sidebar.classList.remove("closed");
-}
-
-function escapeHtml(value) {
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-document.getElementById("searchInput").addEventListener("input", applyFilters);
-
-document.querySelectorAll(".filter-btn").forEach(button => {
-    button.addEventListener("click", function () {
-        selectedCategory = this.dataset.category;
-        setActiveFilterButton(selectedCategory);
-        applyFilters();
+    document.querySelectorAll(".details-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const row = button.closest("tr");
+            openDrawer(row);
+        });
     });
-});
 
-document.querySelectorAll(".nav-item[data-section]").forEach(item => {
-    item.addEventListener("click", function () {
-        handleSidebarNavigation(this.dataset.section);
+    closeDrawer.addEventListener("click", closeDrawerPanel);
+    drawerOverlay.addEventListener("click", closeDrawerPanel);
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeDrawerPanel();
+            aboutModal.classList.add("hidden");
+        }
     });
+
+    aboutBtn.addEventListener("click", () => {
+        aboutModal.classList.remove("hidden");
+    });
+
+    closeAbout.addEventListener("click", () => {
+        aboutModal.classList.add("hidden");
+    });
+
+    aboutModal.addEventListener("click", (event) => {
+        if (event.target === aboutModal) {
+            aboutModal.classList.add("hidden");
+        }
+    });
+
+    if (exportFilteredBtnBottom) {
+        exportFilteredBtnBottom.addEventListener("click", exportFilteredStories);
+    }
+
+    const chartCanvas = document.getElementById("categoryChart");
+
+    if (chartCanvas && typeof categoryData !== "undefined") {
+        const labels = Object.keys(categoryData);
+        const values = Object.values(categoryData);
+
+        if (labels.length > 0 && values.length > 0) {
+            new Chart(chartCanvas, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Stories",
+                        data: values,
+                        backgroundColor: [
+                            "#111111",
+                            "#f4c524",
+                            "#e1783c",
+                            "#4f7d39",
+                            "#c74d2d",
+                            "#8a6a13",
+                            "#d5b041",
+                            "#5b5b5b",
+                            "#e6d9b0",
+                            "#a34d2f",
+                            "#7d8f52",
+                            "#2c5f8a"
+                        ],
+                        borderColor: "#111111",
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "#111111",
+                            titleColor: "#ffffff",
+                            bodyColor: "#ffffff",
+                            borderColor: "#f4c524",
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: "#111111",
+                                font: {
+                                    weight: "700"
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: "#111111",
+                                precision: 0,
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: "rgba(17,17,17,0.12)"
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            chartCanvas.parentElement.innerHTML = `
+                <div style="height:100%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#5a544b;">
+                    No category data available yet.
+                </div>
+            `;
+        }
+    }
 });
-
-closeSidebarBtn.addEventListener("click", closeSidebar);
-openSidebarBtn.addEventListener("click", openSidebar);
-
-document.getElementById("profileBtn").addEventListener("click", function () {
-    alert("Profile menu connected. You can add login/logout features here later.");
-});
-
-loadStories();
-function getCategoryBadgeClass(category) {
-    const badgeClasses = {
-        "AI": "badge-AI",
-        "Cybersecurity": "badge-Cybersecurity",
-        "Programming": "badge-Programming",
-        "Web Development": "badge-WebDevelopment",
-        "Data & Databases": "badge-DataDatabases",
-        "Cloud & DevOps": "badge-CloudDevOps",
-        "Startups & Business": "badge-StartupsBusiness",
-        "Hardware": "badge-Hardware",
-        "Science & Research": "badge-ScienceResearch",
-        "Crypto & Blockchain": "badge-CryptoBlockchain",
-        "Other": "badge-Other"
-    };
-
-    return badgeClasses[category] || "badge-Other";
-}

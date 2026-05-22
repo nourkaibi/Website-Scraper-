@@ -1,0 +1,71 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #fff7ed
+  BorderColor #8b5e3c
+  ArrowColor #8b5e3c
+}
+
+class FlaskApp {
+  +index()
+  +export_csv()
+  +api_stories()
+}
+
+class HackerNewsAPI {
+  +get_top_story_ids()
+  +get_story_details(story_id)
+}
+
+class DataCollectionModule {
+  +fetch_hacker_news_stories(limit)
+}
+
+class Story {
+  +rank
+  +title
+  +author
+  +score
+  +comments
+  +date_time
+  +link
+  +category
+  +matched_keyword
+  +priority
+  +classification_reason
+}
+
+class ClassificationModule {
+  +classify_story(title)
+  +safe_keyword_match(text, keyword)
+}
+
+class PriorityModule {
+  +assign_priority(category, score, comments, keyword)
+}
+
+class StorageModule {
+  +save_to_csv(stories)
+  +read_csv()
+}
+
+class Dashboard {
+  +display_stats()
+  +display_chart()
+  +display_table()
+  +filter_stories()
+  +open_story_modal()
+  +export_filtered_stories()
+}
+
+FlaskApp --> DataCollectionModule
+DataCollectionModule --> HackerNewsAPI
+DataCollectionModule --> Story
+DataCollectionModule --> ClassificationModule
+DataCollectionModule --> PriorityModule
+FlaskApp --> StorageModule
+FlaskApp --> Dashboard
+Dashboard --> Story
+StorageModule --> Story
+@enduml
